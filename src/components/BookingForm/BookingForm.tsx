@@ -64,7 +64,7 @@ const BookingForm = () => {
     mode: "onChange",
   });
 
-  const getFieldsForStep = (step: number) => {
+  const getFieldsForStep = (step: number): (keyof FormData)[] => {
     switch (step) {
       case 1:
         return [
