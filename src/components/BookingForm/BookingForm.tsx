@@ -10,54 +10,92 @@ import FinalThoughts from "./Steps/FinalThoughts";
 import { Button } from "../ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type FormData = {
+const formSchema = z.object({
   // Personal Info
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  age?: string;
-  location: string;
-  occupation: string;
-  description: string;
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  phoneNumber: z.string().min(1, "Phone number is required"),
+  age: z.string().optional(),
+  location: z.string().min(1, "Location is required"),
+  occupation: z.string().min(1, "Occupation is required"),
+  description: z.string().min(1, "Please provide a brief description"),
 
   // Goals & Expectations
-  goals: string[];
-  outcomes: string;
-  challenges: string;
+  goals: z.array(z.string()).min(1, "Please select at least one goal"),
+  outcomes: z.string().min(1, "Please describe your desired outcomes"),
+  challenges: z.string().min(1, "Please describe your challenges"),
 
   // Investment
-  commitmentLevel: number;
-  resourceInvestment: string;
-  openToStrategies: boolean;
+  commitmentLevel: z.number().min(1).max(10),
+  resourceInvestment: z.string().min(1, "Please describe your resource investment"),
+  openToStrategies: z.boolean(),
 
   // Session Preferences
-  package: number;
-  distributeSession?: boolean;
-  availableDays: string[];
-  timeRange: string;
-  platform: string;
+  package: z.number().min(1),
+  distributeSession: z.boolean().optional(),
+  availableDays: z.array(z.string()).min(1, "Please select at least one day"),
+  timeRange: z.string().min(1, "Please select a time range"),
+  platform: z.string().min(1, "Please select a platform"),
 
   // Payment
-  paymentMethod: string;
-  billingStreet?: string;
-  billingCity?: string;
-  termsAccepted: boolean;
+  paymentMethod: z.string().min(1, "Please select a payment method"),
+  billingStreet: z.string().optional(),
+  billingCity: z.string().optional(),
+  termsAccepted: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms to continue",
+  }),
 
   // Final Thoughts
-  additionalInfo?: string;
-  followUpCall: boolean;
-  followUpTime?: string;
-};
+  additionalInfo: z.string().optional(),
+  followUpCall: z.boolean(),
+  followUpTime: z.string().optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const BookingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const form = useForm<FormData>();
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    mode: "onChange",
+  });
+
+  const getFieldsForStep = (step: number) => {
+    switch (step) {
+      case 1:
+        return [
+          "firstName",
+          "lastName",
+          "email",
+          "phoneNumber",
+          "location",
+          "occupation",
+          "description",
+        ];
+      case 2:
+        return ["goals", "outcomes", "challenges"];
+      case 3:
+        return ["commitmentLevel", "resourceInvestment", "openToStrategies"];
+      case 4:
+        return ["package", "availableDays", "timeRange", "platform"];
+      case 5:
+        return ["paymentMethod", "termsAccepted"];
+      case 6:
+        return ["followUpCall"];
+      default:
+        return [];
+    }
+  };
 
   const handleNextStep = async () => {
-    const fields = await form.trigger();
-    if (fields) {
+    const fieldsToValidate = getFieldsForStep(currentStep);
+    const result = await form.trigger(fieldsToValidate);
+
+    if (result) {
       if (currentStep === 6) {
         // Submit form
         const data = form.getValues();
@@ -66,6 +104,8 @@ const BookingForm = () => {
       } else {
         setCurrentStep((prev) => Math.min(prev + 1, 6));
       }
+    } else {
+      toast.error("Please fill in all required fields before proceeding.");
     }
   };
 
@@ -120,7 +160,6 @@ const BookingForm = () => {
         </Button>
         <Button
           onClick={handleNextStep}
-          disabled={false}
           className="flex items-center gap-2"
         >
           {currentStep === 6 ? "Submit Booking" : "Next"}
