@@ -147,7 +147,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ form }) => {
                 <FormLabel>How would you describe yourself in one sentence?</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='Example: "I'm an entrepreneur looking to scale my business"'
+                    placeholder="Example: I'm an entrepreneur looking to scale my business"
                     {...field}
                   />
                 </FormControl>
