@@ -6,21 +6,43 @@ interface ProgressBarProps {
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) => {
+  const steps = [
+    "Personal Information",
+    "Goals & Expectations",
+    "Investment",
+    "Preferences",
+    "Payment",
+    "Final Thoughts"
+  ];
+
   return (
-    <div className="w-full mb-8">
-      <div className="flex items-center justify-between mb-2">
+    <div className="w-full mb-12">
+      <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-medium">
-          STEP {currentStep} OF {totalSteps}
+          Step {currentStep} of {totalSteps}
         </span>
         <span className="text-sm font-medium">
           {Math.round((currentStep / totalSteps) * 100)}%
         </span>
       </div>
-      <div className="w-full h-1 bg-gray-200 rounded-full">
+      <div className="w-full h-2 bg-gray-200 rounded-full">
         <div
-          className="h-1 bg-black rounded-full transition-all duration-300"
+          className="h-2 bg-black rounded-full transition-all duration-300"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         />
+      </div>
+      <div className="flex justify-between mt-2">
+        {steps.map((step, index) => (
+          <div
+            key={step}
+            className={`text-xs font-medium ${
+              index + 1 <= currentStep ? "text-black" : "text-gray-400"
+            }`}
+            style={{ width: "16.66%" }}
+          >
+            {step}
+          </div>
+        ))}
       </div>
     </div>
   );
