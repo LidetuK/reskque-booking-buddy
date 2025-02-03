@@ -93,18 +93,31 @@ const BookingForm = () => {
 
   const handleNextStep = async () => {
     const fieldsToValidate = getFieldsForStep(currentStep);
-    const result = await form.trigger(fieldsToValidate);
+    
+    try {
+      const result = await form.trigger(fieldsToValidate);
+      const formValues = form.getValues(fieldsToValidate);
+      
+      // Check if any required fields are empty
+      const hasEmptyFields = fieldsToValidate.some(field => {
+        const value = formValues[field];
+        return value === undefined || value === "" || (Array.isArray(value) && value.length === 0);
+      });
 
-    if (result) {
-      if (currentStep === 6) {
-        // Submit form
-        const data = form.getValues();
-        console.log("Form submitted:", data);
-        toast.success("Booking submitted successfully! We'll be in touch soon.");
+      if (result && !hasEmptyFields) {
+        if (currentStep === 6) {
+          // Submit form
+          const data = form.getValues();
+          console.log("Form submitted:", data);
+          toast.success("Booking submitted successfully! We'll be in touch soon.");
+        } else {
+          setCurrentStep((prev) => Math.min(prev + 1, 6));
+        }
       } else {
-        setCurrentStep((prev) => Math.min(prev + 1, 6));
+        toast.error("Please fill in all required fields before proceeding.");
       }
-    } else {
+    } catch (error) {
+      console.error("Validation error:", error);
       toast.error("Please fill in all required fields before proceeding.");
     }
   };
