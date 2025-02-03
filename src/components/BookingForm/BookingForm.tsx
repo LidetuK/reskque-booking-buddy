@@ -96,7 +96,7 @@ const BookingForm = () => {
     
     try {
       await form.trigger(fieldsToValidate);
-      const formState = form.getState();
+      const formState = form.formState;
       
       // Check if there are any errors for the current step's fields
       const hasErrors = fieldsToValidate.some(
