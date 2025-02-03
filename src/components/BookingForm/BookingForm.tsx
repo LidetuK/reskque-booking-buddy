@@ -15,43 +15,41 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   // Personal Info
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().optional(),
+  phoneNumber: z.string().optional(),
   age: z.string().optional(),
-  location: z.string().min(1, "Location is required"),
-  occupation: z.string().min(1, "Occupation is required"),
-  description: z.string().min(1, "Please provide a brief description"),
+  location: z.string().optional(),
+  occupation: z.string().optional(),
+  description: z.string().optional(),
 
   // Goals & Expectations
-  goals: z.array(z.string()).min(1, "Please select at least one goal"),
-  outcomes: z.string().min(1, "Please describe your desired outcomes"),
-  challenges: z.string().min(1, "Please describe your challenges"),
+  goals: z.array(z.string()).optional(),
+  outcomes: z.string().optional(),
+  challenges: z.string().optional(),
 
   // Investment
-  commitmentLevel: z.number().min(1).max(10),
-  resourceInvestment: z.string().min(1, "Please describe your resource investment"),
-  openToStrategies: z.boolean(),
+  commitmentLevel: z.number().optional(),
+  resourceInvestment: z.string().optional(),
+  openToStrategies: z.boolean().optional(),
 
   // Session Preferences
-  package: z.number().min(1),
+  package: z.number().optional(),
   distributeSession: z.boolean().optional(),
-  availableDays: z.array(z.string()).min(1, "Please select at least one day"),
-  timeRange: z.string().min(1, "Please select a time range"),
-  platform: z.string().min(1, "Please select a platform"),
+  availableDays: z.array(z.string()).optional(),
+  timeRange: z.string().optional(),
+  platform: z.string().optional(),
 
   // Payment
-  paymentMethod: z.string().min(1, "Please select a payment method"),
+  paymentMethod: z.string().optional(),
   billingStreet: z.string().optional(),
   billingCity: z.string().optional(),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms to continue",
-  }),
+  termsAccepted: z.boolean().optional(),
 
   // Final Thoughts
   additionalInfo: z.string().optional(),
-  followUpCall: z.boolean(),
+  followUpCall: z.boolean().optional(),
   followUpTime: z.string().optional(),
 });
 
@@ -91,33 +89,14 @@ const BookingForm = () => {
     }
   };
 
-  const handleNextStep = async () => {
-    const fieldsToValidate = getFieldsForStep(currentStep);
-    
-    try {
-      await form.trigger(fieldsToValidate);
-      const formState = form.formState;
-      
-      // Check if there are any errors for the current step's fields
-      const hasErrors = fieldsToValidate.some(
-        field => formState.errors[field]
-      );
-
-      if (!hasErrors) {
-        if (currentStep === 6) {
-          // Submit form
-          const data = form.getValues();
-          console.log("Form submitted:", data);
-          toast.success("Booking submitted successfully! We'll be in touch soon.");
-        } else {
-          setCurrentStep((prev) => Math.min(prev + 1, 6));
-        }
-      } else {
-        toast.error("Please fill in all required fields before proceeding.");
-      }
-    } catch (error) {
-      console.error("Validation error:", error);
-      toast.error("Please fill in all required fields before proceeding.");
+  const handleNextStep = () => {
+    if (currentStep === 6) {
+      // Submit form
+      const data = form.getValues();
+      console.log("Form submitted:", data);
+      toast.success("Booking submitted successfully! We'll be in touch soon.");
+    } else {
+      setCurrentStep((prev) => Math.min(prev + 1, 6));
     }
   };
 
