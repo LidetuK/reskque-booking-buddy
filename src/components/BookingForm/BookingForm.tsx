@@ -95,16 +95,15 @@ const BookingForm = () => {
     const fieldsToValidate = getFieldsForStep(currentStep);
     
     try {
-      const result = await form.trigger(fieldsToValidate);
-      const formValues = form.getValues(fieldsToValidate);
+      await form.trigger(fieldsToValidate);
+      const formState = form.getState();
       
-      // Check if any required fields are empty
-      const hasEmptyFields = fieldsToValidate.some(field => {
-        const value = formValues[field];
-        return value === undefined || value === "" || (Array.isArray(value) && value.length === 0);
-      });
+      // Check if there are any errors for the current step's fields
+      const hasErrors = fieldsToValidate.some(
+        field => formState.errors[field]
+      );
 
-      if (result && !hasEmptyFields) {
+      if (!hasErrors) {
         if (currentStep === 6) {
           // Submit form
           const data = form.getValues();
