@@ -25,9 +25,17 @@ const formSchema = z.object({
   description: z.string().optional(),
 
   // Goals & Expectations
-  goals: z.array(z.string()).optional(),
-  outcomes: z.string().optional(),
+  currentSituation: z.string().optional(),
+  background: z.string().optional(),
+  passions: z.string().optional(),
+  topThreeGoals: z.string().optional(),
   challenges: z.string().optional(),
+  improvementAreas: z.array(z.string()).optional(),
+  successVision: z.string().optional(),
+  previousAttempts: z.string().optional(),
+  supportType: z.array(z.string()).optional(),
+  confidenceLevel: z.string().optional(),
+  uncertaintyReason: z.string().optional(),
 
   // Investment
   commitmentLevel: z.number().optional(),
@@ -77,7 +85,19 @@ const BookingForm = () => {
           "description",
         ];
       case 2:
-        return ["goals", "outcomes", "challenges"];
+        return [
+          "currentSituation",
+          "background",
+          "passions",
+          "topThreeGoals",
+          "challenges",
+          "improvementAreas",
+          "successVision",
+          "previousAttempts",
+          "supportType",
+          "confidenceLevel",
+          "uncertaintyReason",
+        ];
       case 3:
         return ["commitmentLevel", "resourceInvestment", "openToStrategies"];
       case 4:
@@ -110,9 +130,17 @@ const BookingForm = () => {
           - Description: ${data.description}
 
           Goals & Expectations:
-          - Goals: ${data.goals?.join(", ")}
-          - Desired Outcomes: ${data.outcomes}
+          - Current Situation: ${data.currentSituation}
+          - Background: ${data.background}
+          - Passions: ${data.passions}
+          - Top 3 Goals: ${data.topThreeGoals}
           - Challenges: ${data.challenges}
+          - Improvement Areas: ${data.improvementAreas?.join(", ")}
+          - Success Vision: ${data.successVision}
+          - Previous Attempts: ${data.previousAttempts}
+          - Support Type: ${data.supportType?.join(", ")}
+          - Confidence Level: ${data.confidenceLevel}
+          - Uncertainty Reason: ${data.uncertaintyReason}
 
           Investment:
           - Commitment Level: ${data.commitmentLevel}/10
