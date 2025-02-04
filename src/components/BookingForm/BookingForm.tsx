@@ -15,26 +15,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   // Personal Info
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  email: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  phoneNumber: z.string().min(1, "Phone number is required"),
   age: z.string().optional(),
-  location: z.string().optional(),
-  occupation: z.string().optional(),
+  location: z.string().min(1, "Location is required"),
+  occupation: z.string().min(1, "Occupation is required"),
   description: z.string().optional(),
 
   // Goals & Expectations
-  currentSituation: z.string().optional(),
-  background: z.string().optional(),
-  passions: z.string().optional(),
-  topThreeGoals: z.string().optional(),
-  challenges: z.string().optional(),
-  improvementAreas: z.array(z.string()).optional(),
-  successVision: z.string().optional(),
+  currentSituation: z.string().min(1, "Current situation is required"),
+  background: z.string().min(1, "Background information is required"),
+  passions: z.string().min(1, "Passions are required"),
+  topThreeGoals: z.string().min(1, "Goals are required"),
+  challenges: z.string().min(1, "Challenges are required"),
+  improvementAreas: z.array(z.string()).min(1, "Please select at least one improvement area"),
+  successVision: z.string().min(1, "Success vision is required"),
   previousAttempts: z.string().optional(),
-  supportType: z.array(z.string()).optional(),
-  confidenceLevel: z.string().optional(),
+  supportType: z.array(z.string()).min(1, "Please select at least one support type"),
+  confidenceLevel: z.string().min(1, "Confidence level is required"),
   uncertaintyReason: z.string().optional(),
 
   // Investment
@@ -214,15 +214,15 @@ const BookingForm = () => {
     if (isSubmitted && currentStep === 6) {
       return (
         <div className="text-center py-8 space-y-4 animate-fadeIn">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">
+          <h2 className="text-2xl font-bold text-black mb-4">
             Thank you for Submitting Your Details!
           </h2>
-          <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-black leading-relaxed max-w-2xl mx-auto">
             Your booking will be confirmed, and you'll receive a calendar invite along with payment instructions. Thank you for trusting us to support you on your journey!
           </p>
           <div className="mt-6">
             <svg
-              className="w-16 h-16 text-green-500 mx-auto"
+              className="w-16 h-16 text-black mx-auto"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
