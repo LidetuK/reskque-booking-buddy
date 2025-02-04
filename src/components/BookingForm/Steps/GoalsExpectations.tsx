@@ -3,7 +3,6 @@ import { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
@@ -13,25 +12,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const GOALS = [
+const PRIMARY_GOALS = [
   "Personal Growth",
   "Career/Business Development",
   "Relationship Improvement",
   "Financial Empowerment",
   "Health & Wellness",
   "Philanthropy",
-  "Other",
-];
-
-const SITUATIONS = [
-  "Entrepreneur",
-  "Business Owner",
-  "Executive",
-  "Freelancer",
-  "Student",
-  "Employed",
-  "Seeking Direction",
   "Other",
 ];
 
@@ -70,22 +65,59 @@ const GoalsExpectations: React.FC<GoalsExpectationsProps> = ({ form }) => {
         <div className="space-y-8">
           <FormField
             control={form.control}
-            name="currentSituation"
+            name="primaryGoal"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>What best describes your current situation?</FormLabel>
-                <FormControl>
-                  <select
-                    className="w-full p-2 border rounded-md"
-                    {...field}
-                  >
-                    <option value="">Select your situation</option>
-                    {SITUATIONS.map((situation) => (
-                      <option key={situation} value={situation}>
-                        {situation}
-                      </option>
+                <FormLabel>What is your primary goal for working with Resk'Que?</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your primary goal" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {PRIMARY_GOALS.map((goal) => (
+                      <SelectItem key={goal} value={goal}>
+                        {goal}
+                      </SelectItem>
                     ))}
-                  </select>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="specificOutcomes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What specific outcomes do you hope to achieve from these sessions?</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Example: 'I want clarity on my next steps,' 'I need actionable strategies to grow my team.'"
+                    className="min-h-[100px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="currentChallenges"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What challenges are you currently facing that Resk'Que can help you overcome?</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Example: 'Lack of focus,' 'Difficulty managing time effectively.'"
+                    className="min-h-[100px]"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -173,7 +205,16 @@ const GoalsExpectations: React.FC<GoalsExpectationsProps> = ({ form }) => {
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   {IMPROVEMENT_AREAS.map((area) => (
                     <div key={area} className="flex items-center space-x-2">
-                      <Checkbox id={area} />
+                      <Checkbox
+                        id={area}
+                        checked={field.value?.includes(area)}
+                        onCheckedChange={(checked) => {
+                          const updatedAreas = checked
+                            ? [...(field.value || []), area]
+                            : field.value?.filter((a: string) => a !== area);
+                          field.onChange(updatedAreas);
+                        }}
+                      />
                       <Label htmlFor={area}>{area}</Label>
                     </div>
                   ))}
@@ -228,7 +269,16 @@ const GoalsExpectations: React.FC<GoalsExpectationsProps> = ({ form }) => {
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   {SUPPORT_TYPES.map((type) => (
                     <div key={type} className="flex items-center space-x-2">
-                      <Checkbox id={type} />
+                      <Checkbox
+                        id={type}
+                        checked={field.value?.includes(type)}
+                        onCheckedChange={(checked) => {
+                          const updatedTypes = checked
+                            ? [...(field.value || []), type]
+                            : field.value?.filter((t: string) => t !== type);
+                          field.onChange(updatedTypes);
+                        }}
+                      />
                       <Label htmlFor={type}>{type}</Label>
                     </div>
                   ))}

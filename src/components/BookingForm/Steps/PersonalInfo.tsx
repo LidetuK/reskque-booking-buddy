@@ -18,6 +18,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const SITUATIONS = [
+  "Entrepreneur",
+  "Business Owner",
+  "Executive",
+  "Freelancer",
+  "Student",
+  "Employed",
+  "Seeking Direction",
+  "Other",
+];
+
 interface PersonalInfoProps {
   form: UseFormReturn<any>;
 }
@@ -74,6 +85,31 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ form }) => {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="currentSituation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What best describes your current situation? *</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your situation" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {SITUATIONS.map((situation) => (
+                      <SelectItem key={situation} value={situation}>
+                        {situation}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="space-y-4">
             <Label>Phone Number *</Label>
             <div className="flex gap-4">
@@ -97,20 +133,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ form }) => {
 
           <FormField
             control={form.control}
-            name="age"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Age (Optional)</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your age" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="location"
             render={({ field }) => (
               <FormItem>
@@ -131,25 +153,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ form }) => {
                 <FormLabel>Occupation/Role *</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter your occupation" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="mt-8">
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>How would you describe yourself in one sentence?</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Example: I'm an entrepreneur looking to scale my business"
-                    {...field}
-                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
