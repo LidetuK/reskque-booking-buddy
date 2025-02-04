@@ -66,6 +66,7 @@ type FormData = z.infer<typeof formSchema>;
 const BookingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -182,6 +183,7 @@ const BookingForm = () => {
         const mailtoLink = `mailto:thee.lifeguide+1on1bookings@gmail.com?subject=New Booking Request&body=${encodeURIComponent(formData.message)}`;
         window.location.href = mailtoLink;
         
+        setIsSubmitted(true);
         toast.success("Booking submitted successfully! We'll be in touch soon.");
       } else {
         throw new Error("Form submission failed");
@@ -209,6 +211,35 @@ const BookingForm = () => {
   };
 
   const renderStep = () => {
+    if (isSubmitted && currentStep === 6) {
+      return (
+        <div className="text-center py-8 space-y-4 animate-fadeIn">
+          <h2 className="text-2xl font-bold text-green-600 mb-4">
+            Thank you for Submitting Your Details!
+          </h2>
+          <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
+            Your booking will be confirmed, and you'll receive a calendar invite along with payment instructions. Thank you for trusting us to support you on your journey!
+          </p>
+          <div className="mt-6">
+            <svg
+              className="w-16 h-16 text-green-500 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      );
+    }
+
     switch (currentStep) {
       case 1:
         return <PersonalInfo form={form} />;
@@ -245,25 +276,27 @@ const BookingForm = () => {
 
       <div className="bg-white rounded-xl shadow-lg p-8 mb-8">{renderStep()}</div>
 
-      <div className="flex justify-between mt-8">
-        <Button
-          variant="outline"
-          onClick={handlePreviousStep}
-          disabled={currentStep === 1 || isSubmitting}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Previous
-        </Button>
-        <Button
-          onClick={handleNextStep}
-          disabled={isSubmitting}
-          className="flex items-center gap-2"
-        >
-          {currentStep === 6 ? (isSubmitting ? "Submitting..." : "Submit Booking") : "Next"}
-          <ArrowRight className="w-4 h-4" />
-        </Button>
-      </div>
+      {(!isSubmitted || currentStep !== 6) && (
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={handlePreviousStep}
+            disabled={currentStep === 1 || isSubmitting}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Previous
+          </Button>
+          <Button
+            onClick={handleNextStep}
+            disabled={isSubmitting}
+            className="flex items-center gap-2"
+          >
+            {currentStep === 6 ? (isSubmitting ? "Submitting..." : "Submit Booking") : "Next"}
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
