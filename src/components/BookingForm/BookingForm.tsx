@@ -229,15 +229,17 @@ const BookingForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">
-          Book Your One-on-One Call with Resk'Que
-        </h1>
-        <p className="text-lg text-gray-600 mb-6">
-          Thank you for choosing to work with Resk'Que! We're excited to help you
-          achieve your goals through personalized guidance and support.
-        </p>
-      </div>
+      {currentStep === 1 && (
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">
+            Book Your One-on-One Call with Resk'Que
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">
+            Thank you for choosing to work with Resk'Que! We're excited to help you
+            achieve your goals through personalized guidance and support.
+          </p>
+        </div>
+      )}
 
       <ProgressBar currentStep={currentStep} totalSteps={6} />
 

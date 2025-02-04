@@ -27,8 +27,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
       </div>
       <div className="w-full h-2 bg-gray-200 rounded-full">
         <div
-          className="h-2 bg-black rounded-full transition-all duration-300"
-          style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+          className="h-2 rounded-full transition-all duration-300"
+          style={{ 
+            width: `${(currentStep / totalSteps) * 100}%`,
+            backgroundColor: "#FF0000"
+          }}
         />
       </div>
       <div className="flex justify-between mt-2">
