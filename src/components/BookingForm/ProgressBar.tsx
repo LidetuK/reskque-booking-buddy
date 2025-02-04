@@ -12,38 +12,35 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
     "Investment",
     "Preferences",
     "Payment",
-    "Final Thoughts"
+    "Final Thoughts",
   ];
 
   return (
-    <div className="w-full mb-12">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-medium">
-          Step {currentStep} of {totalSteps}
-        </span>
-        <span className="text-sm font-medium">
-          {Math.round((currentStep / totalSteps) * 100)}%
-        </span>
-      </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full">
-        <div
-          className="h-2 rounded-full transition-all duration-300"
-          style={{ 
-            width: `${(currentStep / totalSteps) * 100}%`,
-            backgroundColor: "#FF0000"
-          }}
-        />
-      </div>
-      <div className="flex justify-between mt-2">
+    <div className="mb-8">
+      <div className="flex justify-between items-center">
         {steps.map((step, index) => (
           <div
-            key={step}
-            className={`text-xs font-medium ${
-              index + 1 <= currentStep ? "text-black" : "text-gray-400"
+            key={index}
+            className={`relative flex flex-col items-center flex-1 ${
+              index !== steps.length - 1 ? "after:content-[''] after:w-full after:h-[2px] after:border-b after:border-gray-300 after:border-4 after:inline-block after:absolute after:top-6 after:min-w-0 after:-right-1/2" : ""
             }`}
-            style={{ width: "16.66%" }}
           >
-            {step}
+            <div
+              className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                currentStep > index + 1
+                  ? "bg-black text-white"
+                  : currentStep === index + 1
+                  ? "bg-black text-white"
+                  : "bg-gray-300"
+              }`}
+            >
+              {index + 1}
+            </div>
+            <p className={`text-xs sm:text-sm mt-2 text-center px-1 ${
+              currentStep === index + 1 ? "font-semibold" : ""
+            }`}>
+              {step}
+            </p>
           </div>
         ))}
       </div>
