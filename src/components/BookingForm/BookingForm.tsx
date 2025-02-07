@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import ProgressBar from "./ProgressBar";
@@ -259,13 +260,13 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 animate-fadeIn">
+    <div className="w-full max-w-4xl mx-auto px-4 py-4 sm:py-8 animate-fadeIn">
       {currentStep === 1 && (
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold mb-4">
             Book Your One-on-One Call with Resk'Que
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
+          <p className="text-base sm:text-lg text-gray-600 mb-6">
             Thank you for choosing to work with Resk'Que! We're excited to help you
             achieve your goals through personalized guidance and support.
           </p>
@@ -274,15 +275,17 @@ const BookingForm = () => {
 
       <ProgressBar currentStep={currentStep} totalSteps={6} />
 
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-8">{renderStep()}</div>
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8 mb-8 overflow-x-hidden">
+        {renderStep()}
+      </div>
 
       {(!isSubmitted || currentStep !== 6) && (
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-4 sm:mt-8">
           <Button
             variant="outline"
             onClick={handlePreviousStep}
             disabled={currentStep === 1 || isSubmitting}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-sm sm:text-base"
           >
             <ArrowLeft className="w-4 h-4" />
             Previous
@@ -290,7 +293,7 @@ const BookingForm = () => {
           <Button
             onClick={handleNextStep}
             disabled={isSubmitting}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-sm sm:text-base"
           >
             {currentStep === 6 ? (isSubmitting ? "Submitting..." : "Submit Booking") : "Next"}
             <ArrowRight className="w-4 h-4" />
