@@ -11,6 +11,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
   const isMobile = useIsMobile();
   
   const steps = [
+    "Select Date",
     "Personal Information",
     "Goals & Expectations",
     "Investment",

@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import ProgressBar from "./ProgressBar";
+import DateSelection from "./Steps/DateSelection";
 import PersonalInfo from "./Steps/PersonalInfo";
 import GoalsExpectations from "./Steps/GoalsExpectations";
 import Investment from "./Steps/Investment";
@@ -15,6 +15,9 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
+  selectedDate: z.date({
+    required_error: "Please select a date for your session",
+  }),
   // Personal Info
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -77,6 +80,8 @@ const BookingForm = () => {
   const getFieldsForStep = (step: number): (keyof FormData)[] => {
     switch (step) {
       case 1:
+        return ["selectedDate"];
+      case 2:
         return [
           "firstName",
           "lastName",
@@ -86,7 +91,7 @@ const BookingForm = () => {
           "occupation",
           "description",
         ];
-      case 2:
+      case 3:
         return [
           "currentSituation",
           "background",
@@ -100,13 +105,13 @@ const BookingForm = () => {
           "confidenceLevel",
           "uncertaintyReason",
         ];
-      case 3:
-        return ["commitmentLevel", "resourceInvestment", "openToStrategies"];
       case 4:
-        return ["package", "availableDays", "timeRange", "platform"];
+        return ["commitmentLevel", "resourceInvestment", "openToStrategies"];
       case 5:
-        return ["paymentMethod", "termsAccepted"];
+        return ["package", "availableDays", "timeRange", "platform"];
       case 6:
+        return ["paymentMethod", "termsAccepted"];
+      case 7:
         return ["followUpCall"];
       default:
         return [];
@@ -198,12 +203,25 @@ const BookingForm = () => {
   };
 
   const handleNextStep = () => {
-    if (currentStep === 6) {
+    const fields = getFieldsForStep(currentStep);
+    const stepData = form.getValues(fields);
+    
+    // Check if the required fields for the current step are filled
+    const hasEmptyFields = fields.some(
+      (field) => !form.getValues(field)
+    );
+
+    if (hasEmptyFields) {
+      toast.error("Please fill in all required fields before proceeding.");
+      return;
+    }
+
+    if (currentStep === 7) {
       // Submit form
       const data = form.getValues();
       handleSubmitToWeb3Forms(data);
     } else {
-      setCurrentStep((prev) => Math.min(prev + 1, 6));
+      setCurrentStep((prev) => Math.min(prev + 1, 7));
     }
   };
 
@@ -212,7 +230,7 @@ const BookingForm = () => {
   };
 
   const renderStep = () => {
-    if (isSubmitted && currentStep === 6) {
+    if (isSubmitted && currentStep === 7) {
       return (
         <div className="text-center py-8 space-y-4 animate-fadeIn">
           <h2 className="text-2xl font-bold text-black mb-4">
@@ -243,16 +261,18 @@ const BookingForm = () => {
 
     switch (currentStep) {
       case 1:
-        return <PersonalInfo form={form} />;
+        return <DateSelection form={form} />;
       case 2:
-        return <GoalsExpectations form={form} />;
+        return <PersonalInfo form={form} />;
       case 3:
-        return <Investment form={form} />;
+        return <GoalsExpectations form={form} />;
       case 4:
-        return <SessionPreferences form={form} />;
+        return <Investment form={form} />;
       case 5:
-        return <Payment form={form} />;
+        return <SessionPreferences form={form} />;
       case 6:
+        return <Payment form={form} />;
+      case 7:
         return <FinalThoughts form={form} />;
       default:
         return <div>Step {currentStep} coming soon...</div>;
@@ -261,25 +281,13 @@ const BookingForm = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-4 sm:py-8 animate-fadeIn">
-      {currentStep === 1 && (
-        <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-4xl font-bold mb-4">
-            Book Your One-on-One Call with Resk'Que
-          </h1>
-          <p className="text-base sm:text-lg text-gray-600 mb-6">
-            Thank you for choosing to work with Resk'Que! We're excited to help you
-            achieve your goals through personalized guidance and support.
-          </p>
-        </div>
-      )}
-
-      <ProgressBar currentStep={currentStep} totalSteps={6} />
+      <ProgressBar currentStep={currentStep} totalSteps={7} />
 
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8 mb-8 overflow-x-hidden">
         {renderStep()}
       </div>
 
-      {(!isSubmitted || currentStep !== 6) && (
+      {(!isSubmitted || currentStep !== 7) && (
         <div className="flex justify-between mt-4 sm:mt-8">
           <Button
             variant="outline"
@@ -295,7 +303,7 @@ const BookingForm = () => {
             disabled={isSubmitting}
             className="flex items-center gap-2 text-sm sm:text-base"
           >
-            {currentStep === 6 ? (isSubmitting ? "Submitting..." : "Submit Booking") : "Next"}
+            {currentStep === 7 ? (isSubmitting ? "Submitting..." : "Submit Booking") : "Next"}
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
