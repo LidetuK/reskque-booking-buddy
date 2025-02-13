@@ -5,6 +5,9 @@ export const formSchema = z.object({
   selectedDate: z.date({
     required_error: "Please select a date for your session",
   }),
+  selectedTime: z.string({
+    required_error: "Please select a time slot",
+  }),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),

@@ -4,7 +4,7 @@ import { FormData } from "../config/formSchema";
 export const getFieldsForStep = (step: number): (keyof FormData)[] => {
   switch (step) {
     case 1:
-      return ["selectedDate"];
+      return ["selectedDate", "selectedTime"];
     case 2:
       return [
         "firstName",
