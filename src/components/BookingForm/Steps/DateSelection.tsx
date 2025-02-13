@@ -11,55 +11,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { checkAvailability } from "../services/calendarService";
 
 interface DateSelectionProps {
   form: UseFormReturn<any>;
 }
 
-// This would be replaced with actual API data
-const mockBookedDates = [
-  new Date(2024, 3, 15),
-  new Date(2024, 3, 20),
-  new Date(2024, 3, 25),
-];
-
-// This would come from your calendar API
-const mockTimeSlots = [
-  "09:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-];
-
 const DateSelection: React.FC<DateSelectionProps> = ({ form }) => {
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([]);
 
-  const checkDateAvailability = async (date: Date | undefined) => {
+  const handleDateSelection = async (date: Date | undefined) => {
     if (!date) return;
     
     setIsCheckingAvailability(true);
     
     try {
-      // Simulate API call to check availability
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const availability = await checkAvailability(date);
       
-      const isBooked = mockBookedDates.some(
-        (bookedDate) => bookedDate.toDateString() === date.toDateString()
-      );
-      
-      if (isBooked) {
-        toast.error("This date is already booked. Please select another date.");
+      if (!availability.available) {
+        toast.error("This date is not available. Please select another date.");
         form.setValue("selectedDate", undefined);
         form.setValue("selectedTime", undefined);
         setAvailableTimeSlots([]);
       } else {
         toast.success("Date is available! Please select a time slot.");
         form.setValue("selectedDate", date);
-        // In a real implementation, this would fetch available time slots from your calendar API
-        setAvailableTimeSlots(mockTimeSlots);
+        setAvailableTimeSlots(availability.timeSlots);
       }
     } catch (error) {
       toast.error("Error checking availability. Please try again.");
@@ -91,15 +69,8 @@ const DateSelection: React.FC<DateSelectionProps> = ({ form }) => {
         <Calendar
           mode="single"
           selected={form.watch("selectedDate")}
-          onSelect={checkDateAvailability}
-          disabled={(date) => 
-            date < new Date() || 
-            date.getDay() === 0 || 
-            date.getDay() === 6 ||
-            mockBookedDates.some(
-              (bookedDate) => bookedDate.toDateString() === date.toDateString()
-            )
-          }
+          onSelect={handleDateSelection}
+          disabled={(date) => date < new Date()}
           initialFocus
           className="rounded-md border"
         />
