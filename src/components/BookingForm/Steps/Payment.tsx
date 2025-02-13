@@ -1,3 +1,4 @@
+
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import {
@@ -22,8 +23,8 @@ const Payment: React.FC<PaymentProps> = ({ form }) => {
   return (
     <div className="space-y-8 animate-fadeIn">
       <div className="border-b pb-4 mb-8">
-        <h2 className="text-2xl font-semibold">Payment Details</h2>
-        <p className="text-gray-600">Complete your booking with secure payment</p>
+        <h2 className="text-2xl font-semibold">Booking Summary</h2>
+        <p className="text-gray-600">Review your session details and confirm</p>
       </div>
 
       <Form {...form}>

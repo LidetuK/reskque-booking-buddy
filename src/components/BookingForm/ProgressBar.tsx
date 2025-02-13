@@ -16,7 +16,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
     "Goals & Expectations",
     "Investment",
     "Preferences",
-    "Payment",
+    "Summation",
     "Final Thoughts",
   ];
 
