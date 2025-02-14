@@ -90,12 +90,16 @@ const DateSelection: React.FC<DateSelectionProps> = ({ form }) => {
               value={form.watch("selectedTime")}
               onValueChange={handleTimeSelection}
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a time slot" />
+              <SelectTrigger className="w-full bg-white border-2 border-gray-200 hover:border-black transition-colors">
+                <SelectValue placeholder="Select a time slot" className="text-gray-600" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border-2 shadow-lg">
                 {availableTimeSlots.map((time) => (
-                  <SelectItem key={time} value={time}>
+                  <SelectItem 
+                    key={time} 
+                    value={time}
+                    className="text-base py-3 hover:bg-gray-100 hover:text-black cursor-pointer font-medium focus:bg-gray-100 focus:text-black"
+                  >
                     {time}
                   </SelectItem>
                 ))}
