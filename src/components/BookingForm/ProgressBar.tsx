@@ -21,13 +21,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
   ];
 
   return (
-    <div className="mb-4 sm:mb-8 overflow-x-auto">
-      <div className="flex justify-between items-center min-w-[600px] sm:min-w-0 px-2">
+    <div className="mb-4 sm:mb-8">
+      <div className="flex justify-between items-center px-1 sm:px-2 max-w-full overflow-x-hidden">
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`relative flex flex-col items-center ${
-              index === steps.length - 1 ? "flex-1" : "flex-1"
+            className={`relative flex flex-col items-center flex-1 ${
+              isMobile ? 'px-1' : ''
             }`}
           >
             <div
@@ -35,13 +35,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
                 relative
                 ${
                   index !== steps.length - 1
-                    ? "after:content-[''] after:w-full after:h-[2px] after:border-b after:border-gray-300 after:border-4 after:inline-block after:absolute after:top-6 after:min-w-0 after:-right-1/2"
+                    ? "after:content-[''] after:w-full after:h-[1px] after:border-b after:border-gray-300 after:border-2 after:inline-block after:absolute after:top-3 sm:after:top-6 after:min-w-0 after:-right-1/2"
                     : ""
                 }
               `}
             >
               <div
-                className={`w-8 h-8 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${
+                className={`w-6 h-6 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${
                   currentStep > index + 1
                     ? "bg-black text-white"
                     : currentStep === index + 1
@@ -49,11 +49,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) =>
                     : "bg-gray-300"
                 }`}
               >
-                <span className="text-xs sm:text-base">{index + 1}</span>
+                <span className={`${isMobile ? 'text-[10px]' : 'text-base'}`}>{index + 1}</span>
               </div>
             </div>
             <p
-              className={`text-[10px] sm:text-sm mt-2 text-center max-w-[80px] sm:max-w-none ${
+              className={`text-[8px] sm:text-sm mt-1 sm:mt-2 text-center ${
                 currentStep === index + 1 ? "font-semibold" : ""
               }`}
             >
